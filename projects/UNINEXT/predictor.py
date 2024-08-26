@@ -274,7 +274,11 @@ class UNINEXTPredictor:
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
         # for UNINEXT
-        self.tokenizer = AutoTokenizer.from_pretrained('projects/UNINEXT/bert-base-uncased')
+        if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "xlm-roberta-base":
+            self.tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained('projects/UNINEXT/bert-base-uncased')
+        
         self.prompt_test_dict = {}
         self.positive_map_label_to_token_dict = {}
         test_categories = None
