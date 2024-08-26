@@ -130,8 +130,12 @@ class UNINEXT_IMG(nn.Module):
 
         # Language (text encoder and tokenizer)
         self.parallel_det = cfg.MODEL.PARALLEL_DET
+        if cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "xlm-roberta-base":
+            self.tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
+        
         # Here we use BERT as the text encoder in a hard-code way
-        self.tokenizer = AutoTokenizer.from_pretrained("projects/UNINEXT/bert-base-uncased")
+        else:
+            self.tokenizer = AutoTokenizer.from_pretrained("projects/UNINEXT/bert-base-uncased")
         if self.parallel_det:
             self.text_encoder = BertEncoder(cfg)
         else:

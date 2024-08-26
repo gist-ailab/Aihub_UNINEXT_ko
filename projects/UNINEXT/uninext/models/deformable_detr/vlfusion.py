@@ -95,7 +95,7 @@ class VLFuse(torch.nn.Module):
         self.n_head = 8
         self.embed_dim = cfg.MODEL.DDETRS.VL_HIDDEN_DIM # 2048 by default
 
-        if self.lang_model in ["bert-base-uncased", "roberta-base", "clip"]:
+        if self.lang_model in ["bert-base-uncased", "roberta-base", "clip", "xlm-roberta-base"]:
             self.lang_dim = cfg.MODEL.LANGUAGE_BACKBONE.LANG_DIM # 768
         else:
             self.lang_dim = 1024
