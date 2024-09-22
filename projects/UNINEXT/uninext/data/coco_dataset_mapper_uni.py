@@ -139,8 +139,11 @@ class DetrDatasetMapperUni:
             self.ind_to_class_dict["coco"] = cat2ind(COCO_CATEGORIES)
             self.ind_to_class_dict["obj365v2"] = cat2ind(OBJECTS365V2_CATEGORIES)
             use_roberta = cfg.MODEL.LANGUAGE_BACKBONE.TOKENIZER_TYPE == "roberta-base" and cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "roberta-base"
+            use_xlm_roberta = cfg.MODEL.LANGUAGE_BACKBONE.TOKENIZER_TYPE == "xlm-roberta-base" and cfg.MODEL.LANGUAGE_BACKBONE.MODEL_TYPE == "xlm-roberta-base"
             if use_roberta:
                 self.tokenizer = RobertaTokenizerFast.from_pretrained('projects/UNINEXT/roberta-base')
+            elif use_xlm_roberta:
+                self.tokenizer = AutoTokenizer.from_pretrained('xlm-roberta-base')
             else:
                 self.tokenizer = AutoTokenizer.from_pretrained('projects/UNINEXT/bert-base-uncased') # align with GLIP
             self.max_query_len = cfg.MODEL.LANGUAGE_BACKBONE.MAX_QUERY_LEN

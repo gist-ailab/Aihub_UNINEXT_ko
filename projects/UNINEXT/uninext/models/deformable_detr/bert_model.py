@@ -25,6 +25,27 @@ class BertEncoder(nn.Module):
             self.language_dim = 768
         elif self.bert_name == "xlm-roberta-base":
             self.model = AutoModelForMaskedLM.from_pretrained("xlm-roberta-base")
+            
+            # # Make XLM-RoBERTa's other layers untrainable
+            # for i in range(10, 12):
+            #     for p in self.model.roberta.encoder.layer[i].parameters():
+            #         p.requires_grad = False
+
+            # # Make XLM-RoBERTa's encoder layers trainable
+            # for i in range(10):
+            #     for p in self.model.roberta.encoder.layer[i].parameters():
+            #         p.requires_grad = True
+            
+            # Make lm_head untrainable
+            for p in self.model.lm_head.parameters():
+                p.requires_grad = False 
+
+            # # Make Roberta's embeddings untrainable
+            # for p in self.model.roberta.embeddings.parameters():
+            #     p.requires_grad = False
+
+            # [[p for p in self.model.text_encoder.roberta.encoder.layer[i].parameters()
+            #                     if p.requires_grad] for i in range(10)]
             self.language_dim = 768
         else:
             raise NotImplementedError
@@ -58,20 +79,30 @@ class BertEncoder(nn.Module):
                 output_hidden_states=True,
             )
         # outputs has 13 layers, 1 input layer and 12 hidden layers
-        encoded_layers = outputs.hidden_states[1:]
-        # features = None
-        # features = torch.stack(encoded_layers[-self.num_layers:], 1).mean(1) # (bs, seq_len, language_dim)
+        
+        if self.bert_name == "xlm-roberta-base":
+            encoded_layers = outputs.hidden_states[0]
+            ret = {
+                # "aggregate": aggregate,
+                # "embedded": embedded,
+                "masks": mask,
+                "hidden": encoded_layers
+            }
+        else:
+            encoded_layers = outputs.hidden_states[1:]
+            # features = None
+            # features = torch.stack(encoded_layers[-self.num_layers:], 1).mean(1) # (bs, seq_len, language_dim)
 
-        # # language embedding has shape [len(phrase), seq_len, language_dim]
-        # features = features / self.num_layers
+            # # language embedding has shape [len(phrase), seq_len, language_dim]
+            # features = features / self.num_layers
 
-        # embedded = features * mask.unsqueeze(-1).float() # use mask to zero out invalid token features
-        # aggregate = embedded.sum(1) / (mask.sum(-1).unsqueeze(-1).float())
+            # embedded = features * mask.unsqueeze(-1).float() # use mask to zero out invalid token features
+            # aggregate = embedded.sum(1) / (mask.sum(-1).unsqueeze(-1).float())
 
-        ret = {
-            # "aggregate": aggregate,
-            # "embedded": embedded,
-            "masks": mask,
-            "hidden": encoded_layers[-1]
-        }
+            ret = {
+                # "aggregate": aggregate,
+                # "embedded": embedded,
+                "masks": mask,
+                "hidden": encoded_layers[-1]
+            }
         return ret

@@ -153,6 +153,7 @@ class Trainer(DefaultTrainer):
             if not value.requires_grad:
                 continue
             # Avoid duplicating parameters
+            print(key)
             if value in memo:
                 continue
             memo.add(value)

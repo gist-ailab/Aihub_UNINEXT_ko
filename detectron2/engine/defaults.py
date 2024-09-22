@@ -379,6 +379,7 @@ class DefaultTrainer(TrainerBase):
 
         model = create_ddp_model(model, broadcast_buffers=False, 
         find_unused_parameters=cfg.FIND_UNUSED_PARAMETERS)
+        model._set_static_graph()
         self._trainer = (AMPTrainer if cfg.SOLVER.AMP.ENABLED else SimpleTrainer)(
             model, data_loader, optimizer
         )
