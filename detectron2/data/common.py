@@ -132,11 +132,11 @@ class DatasetFromList(data.Dataset):
 
         if self._serialize:
             logger = logging.getLogger(__name__)
-            logger.info(
-                "Serializing {} elements to byte tensors and concatenating them all ...".format(
-                    len(self._lst)
-                )
-            )
+            # logger.info(
+            #     "Serializing {} elements to byte tensors and concatenating them all ...".format(
+            #         len(self._lst)
+            #     )
+            # )
             self._lst = [_serialize(x) for x in self._lst]
             self._addr = np.asarray([len(x) for x in self._lst], dtype=np.int64)
             self._addr = np.cumsum(self._addr)

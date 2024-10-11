@@ -84,6 +84,7 @@ def load_refcoco_json(json_file, image_root, dataset_name=None, extra_annotation
         coco_api = COCO(json_file)
     if timer.seconds() > 1:
         logger.info("Loading {} takes {:.2f} seconds.".format(json_file, timer.seconds()))
+        # logger.info("Lading /data/datasets/aihub_22 takes {:.2f} seconds.".format(timer.seconds()))
 
     id_map = None
     if dataset_name is not None:
@@ -157,7 +158,7 @@ Category ids in annotations are not in [1, #categories]! We'll apply a mapping f
         )
 
     imgs_anns = list(zip(imgs, anns))
-    logger.info("Loaded {} images in COCO format from {}".format(len(imgs_anns), json_file))
+    # logger.info("Loaded {} images in COCO format from {}".format(len(imgs_anns), json_file))
 
     dataset_dicts = []
 

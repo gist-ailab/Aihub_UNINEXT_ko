@@ -65,11 +65,11 @@ def filter_images_with_only_crowd_annotations(dataset_dicts, dataset_names):
     dataset_dicts = [x for x in dataset_dicts if valid(x["annotations"])]
     num_after = len(dataset_dicts)
     logger = logging.getLogger(__name__)
-    logger.info(
-        "Removed {} images with no usable annotations. {} images left.".format(
-            num_before - num_after, num_after
-        )
-    )
+    # logger.info(
+    #     "Removed {} images with no usable annotations. {} images left.".format(
+    #         num_before - num_after, num_after
+    #     )
+    # )
     return dataset_dicts
 
 

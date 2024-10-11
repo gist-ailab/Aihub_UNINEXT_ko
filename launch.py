@@ -77,6 +77,11 @@ if __name__ == '__main__':
             cmd += f" --num-machines={num_workers}\
                     --machine-rank={worker_rank}\
                     --dist-url={dist_url}"
+        else:
+            master_address = '127.0.0.1'
+            dist_url = "tcp://" + str(master_address) + ":" + str(master_port)
+            cmd += f" --dist-url={dist_url}"
+                # --eval-only"
     else:
         print(f'Start {args.launch}!', flush=True)
         cmd = f'python3 {args.launch}'
